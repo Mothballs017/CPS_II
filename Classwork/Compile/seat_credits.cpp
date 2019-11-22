@@ -71,10 +71,9 @@ public:
 public:
 	Pickup(){ front = 5; }
 
-	void setPickup(int f)
+	void setPickup(int f=0)
 	{
-		front = f;
-		return;
+		front = f
 	}
 };
 
@@ -84,12 +83,21 @@ public:
 public:
 	Compact(){ front = 5; back1 = 3; back2=3; }
 
-	void setCompact(int f, int b1, int b2)
+	void setCompact(int f=0, int b1=0, int b2=0)
 	{
 		front = f;
 		back1 = b1;
 		back2 = b2;
 		return;
+	}
+	void setCompactf(int f=0){
+		front = f;
+	}
+	void setCompactb1(int b1=0){
+		back1 = b1;
+	}
+	void setCompactb2(int b2=0){
+		back2 = b2;
 	}
 };
 
@@ -99,13 +107,25 @@ public:
 public:
 	Sedan(){ front = 5; sideback1=2; sideback2=2; sidemiddle=1; }
 
-	void setSedan(int f, int sb1, int sb2, int sm)
+	void setSedan(int f=0, int sb1=0, int sb2=0, int sm=0)
 	{
 		front = f;
 		sideback1 = sb1;
 		sideback2 = sb2;
 		sidemiddle = sm;
 		return;
+	}
+	void setSedanf(int f=0){
+		front = f;
+	}
+	void setSedansb1(int sb1=0){
+		sideback1 = sb1;
+	}
+	void setSedansb2(int sb2=0){
+		sideback2 = sb2;
+	}
+	void setSedansm(int sm=0){
+		sidemiddle = sm;
 	}
 };
 
@@ -128,7 +148,7 @@ passenger *Read(){
 		inFile >> current->fname;
 		inFile >> current->lname;
 		inFile >> current->credit;inFile.ignore();
-		current->reserve=100;
+		current->reserve=0;
 		current->vehicle="NONE";
 		current->color="NONE";
 		current->location="NONE";
@@ -151,28 +171,49 @@ passenger *Read(){
 
 
 void Reservation(passenger *head) {
-	passenger *current=head;
-	ofstream outFile;
-	outFile.open("all_reservations.txt");
-	cout << "file out" << endl;
-	if(current==NULL)
-		outFile<<"NULL"<<endl;
+	string password="BATMAN";
+	cout << "Are you the system administrator?\n--Please enter password--" << endl;
+	string check,tmp;
+	cin>>tmp;
+	for(char x: tmp)
+		check+=toupper(x);
+	if(check!=password)
+		cout << "Permission denied" << endl;
 	else{
-		while (current->nextaddr != NULL)
-		{
-			outFile<< "Passenger (" << current->reserve << ")" << endl;
-			outFile<< "Name: "<< current->lname << ", " << current->fname << endl;
-			outFile<< "Vehicle: " << current->color << " " << current->vehicle << endl;
-			outFile<< "Seat Location: " << current->location << endl;
-			outFile<< "------------------------------------\n";
-			current=current->nextaddr;
+		passenger *current=head;
+		ofstream outFile;
+		outFile.open("all_reservations.txt");
+		cout << "file out" << endl;
+		if(current==NULL)
+			outFile<<"NULL"<<endl;
+		else{
+			while (current->nextaddr != NULL)
+			{
+				outFile<< "Passenger (" << current->reserve << ")" << endl;
+				outFile<< "Name: "<< current->lname << ", " << current->fname << endl;
+				outFile<< "Vehicle: " << current->color << " " << current->vehicle << endl;
+				outFile<< "Seat Location: " << current->location << endl;
+				outFile<< "------------------------------------\n";
+				current=current->nextaddr;
+			}
 		}
+		outFile.close();
 	}
-	outFile.close();
+
 }
 
-void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
-//	change passenger->reserved.zero class seats using class functions.specify seats by value
+void Modify(passenger *head){
+	//check reservation #/print error, display vehicle+seat,reselect vehicle, reselect seat
+	//CREATE VEHICLE+SEAT function and replace in Create()
+	passenger *current=head;
+	int res;
+	cout << "Please enter valid Reservation number: ";
+	cin>>res;
+	if(res<=9 && res>0)
+		cin.ignore();
+}
+
+void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int reserve){
 	string first, last;
 	bool quit=false;
 	passenger *current;
@@ -207,19 +248,31 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 				for(int i=0;i<3;i++){
 					if(pick[i].front!=0){
 						current->credit-=5;
-						pick[i].front=0;
+						pick[i].setPickup();
+						current->vehicle=pick[i].type;
+						current->color=pick[i].color;
+						current->location="FRONT";
+						current->reserve=reserve;
 						quit=!quit;
 						break;
 					}else{
 						if(comp[i].front!=0){
 							current->credit-=5;
-							comp[i].front=0;
+							comp[i].setCompactf();
+							current->vehicle=comp[i].type;
+							current->color=comp[i].color;
+							current->location="FRONT";
+							current->reserve=reserve;
 							quit=!quit;
 							break;
 						}else
 							if(sed[i].front!=0){
 								current->credit-=5;
-								sed[i].front=0;
+								sed[i].setSedanf();
+								current->vehicle=sed[i].type;
+								current->color=sed[i].color;
+								current->location="FRONT";
+								current->reserve=reserve;
 								quit=!quit;
 								break;
 							}
@@ -243,7 +296,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 							if(color=="PURPLE"){
 								if(pick[0].front!=0){
 									current->credit-=5;
-									pick[0].front=0;
+									pick[0].setPickup();
+									current->vehicle=pick[0].type;
+									current->color=pick[0].color;
+									current->location="FRONT";
+									current->reserve=reserve;
 									quit=!quit;
 									break;
 								}
@@ -252,7 +309,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 							if(color=="YELLOW"){
 								if(pick[1].front!=0){
 									current->credit-=5;
-									pick[1].front=0;
+									pick[1].setPickup();
+									current->vehicle=pick[1].type;
+									current->color=pick[1].color;
+									current->location="FRONT";
+									current->reserve=reserve;
 									quit=!quit;
 									break;
 								}
@@ -261,7 +322,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 							if(color=="RED"){
 								if(pick[2].front!=0){
 									current->credit-=5;
-									pick[2].front=0;
+									pick[2].setPickup();
+									current->vehicle=pick[2].type;
+									current->color=pick[2].color;
+									current->location="FRONT";
+									current->reserve=reserve;
 									quit=!quit;
 									break;
 								}
@@ -285,7 +350,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==1){
 									if(comp[0].front!=0){
 										current->credit-=5;
-										comp[0].front=0;
+										comp[0].setCompactf();
+										current->vehicle=comp[0].type;
+										current->color=comp[0].color;
+										current->location="FRONT";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -294,7 +363,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==2){
 									if(comp[0].back1!=0){
 										current->credit-=3;
-										comp[0].back1=0;
+										comp[0].setCompactb1();
+										current->vehicle=comp[0].type;
+										current->color=comp[0].color;
+										current->location="LEFT BACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -303,7 +376,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==3){
 									if(comp[0].back2!=0){
 										current->credit-=3;
-										comp[0].back2=0;
+										comp[0].setCompactb2;
+										current->vehicle=comp[0].type;
+										current->color=comp[0].color;
+										current->location="RIGHT BACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -316,7 +393,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==1){
 									if(comp[1].front!=0){
 										current->credit-=5;
-										comp[1].front=0;
+										comp[1].setCompactf();
+										current->vehicle=comp[1].type;
+										current->color=comp[1].color;
+										current->location="FRONT";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -325,7 +406,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==2){
 									if(comp[1].back1!=0){
 										current->credit-=3;
-										comp[1].back1=0;
+										comp[1].setCompactb1();
+										current->vehicle=comp[1].type;
+										current->color=comp[1].color;
+										current->location="LEFT BACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -334,7 +419,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==3){
 									if(comp[1].back2!=0){
 										current->credit-=3;
-										comp[1].back2=0;
+										comp[1].setCompactb2();
+										current->vehicle=comp[1].type;
+										current->color=comp[1].color;
+										current->location="RIGHT BACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -347,7 +436,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==1){
 									if(comp[2].front!=0){
 										current->credit-=5;
-										comp[2].front=0;
+										comp[2].setCompactf();
+										current->vehicle=comp[2].type;
+										current->color=comp[2].color;
+										current->location="FRONT";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -356,7 +449,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==2){
 									if(comp[2].back1!=0){
 										current->credit-=3;
-										comp[2].back1=0;
+										comp[2].setCompactb1();
+										current->vehicle=comp[2].type;
+										current->color=comp[2].color;
+										current->location="LEFT BACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -365,7 +462,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==3){
 									if(comp[2].back2!=0){
 										current->credit-=3;
-										comp[2].back2=0;
+										comp[2].setCompactb2();
+										current->vehicle=comp[2].type;
+										current->color=comp[2].color;
+										current->location="RIGHT BACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -390,7 +491,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==1){
 									if(sed[0].front!=0){
 										current->credit-=5;
-										sed[0].front=0;
+										sed[0].setSedanf();
+										current->vehicle=sed[0].type;
+										current->color=sed[0].color;
+										current->location="FRONT";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -399,7 +504,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==2){
 									if(sed[0].sideback1!=0){
 										current->credit-=2;
-										sed[0].sideback1=0;
+										sed[0].setSedansb1();
+										current->vehicle=sed[0].type;
+										current->color=sed[0].color;
+										current->location="LEFT SIDEBACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -408,7 +517,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==3){
 									if(sed[0].sidemiddle!=0){
 										current->credit-=1;
-										sed[0].sidemiddle=0;
+										sed[0].setSedansm();
+										current->vehicle=sed[0].type;
+										current->color=sed[0].color;
+										current->location="MIDDLE BACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -417,7 +530,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==4){
 									if(sed[0].sideback2!=0){
 										current->credit-=2;
-										sed[0].sideback2=0;
+										sed[0].setSedansb2();
+										current->vehicle=sed[0].type;
+										current->color=sed[0].color;
+										current->location="RIGHT SIDEBACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -430,7 +547,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==1){
 									if(sed[1].front!=0){
 										current->credit-=5;
-										sed[1].front=0;
+										sed[1].setSedanf();
+										current->vehicle=sed[1].type;
+										current->color=sed[1].color;
+										current->location="FRONT";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -439,7 +560,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==2){
 									if(sed[1].sideback1!=0){
 										current->credit-=2;
-										sed[1].sideback1=0;
+										sed[1].setSedansb1();
+										current->vehicle=sed[1].type;
+										current->color=sed[1].color;
+										current->location="LEFT SIDEBACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -448,7 +573,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==3){
 									if(sed[1].sidemiddle!=0){
 										current->credit-=1;
-										sed[1].sidemiddle=0;
+										sed[1].setSedansm();
+										current->vehicle=sed[1].type;
+										current->color=sed[1].color;
+										current->location="MIDDLE BACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -457,7 +586,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==4){
 									if(sed[1].sideback2!=0){
 										current->credit-=2;
-										sed[1].sideback2=0;
+										sed[1].setSedansb2();
+										current->vehicle=sed[1].type;
+										current->color=sed[1].color;
+										current->location="RIGHT SIDEBACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -470,7 +603,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==1){
 									if(sed[2].front!=0){
 										current->credit-=5;
-										sed[2].front=0;
+										sed[2].setSedanf();
+										current->vehicle=sed[2].type;
+										current->color=sed[2].color;
+										current->location="FRONT";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -479,7 +616,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==2){
 									if(sed[2].sideback1!=0){
 										current->credit-=2;
-										sed[2].sideback1=0;
+										sed[2].setSedansb1();
+										current->vehicle=sed[2].type;
+										current->color=sed[2].color;
+										current->location="LEFT SIDEBACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -488,7 +629,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==3){
 									if(sed[2].sidemiddle!=0){
 										current->credit-=1;
-										sed[2].sidemiddle=0;
+										sed[2].setSedansm();
+										current->vehicle=sed[2].type;
+										current->color=sed[2].color;
+										current->location="MIDDLE BACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -497,7 +642,11 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 								if(seat==4){
 									if(sed[2].sideback2!=0){
 										current->credit-=2;
-										sed[2].sideback2=0;
+										sed[2].setSedansb2();
+										current->vehicle=sed[2].type;
+										current->color=sed[2].color;
+										current->location="RIGHT SIDEBACK";
+										current->reserve=reserve;
 										quit=!quit;
 										break;
 									}
@@ -541,7 +690,9 @@ int main()
 	sed[2].setCar("BLUE","SEDAN");
 
 	passenger *head = Read();
-//	Create(head,pick,comp,sed);
+	int reserve_num=0;
+	reserve_num++;
+//	Create(head,pick,comp,sed,reserve_num);
 //	string tmp="Can you Re@d this?";
 //	string tmp2;
 //	cout<<tmp << endl;
