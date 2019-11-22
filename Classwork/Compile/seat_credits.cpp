@@ -22,20 +22,11 @@ struct passenger
 	int credit;
 	int reserve;
 	string vehicle;
-	int location;
+	string color;
+	string location;
 	bool randomized=false;
 	passenger *nextaddr;
 };
-
-// struct reserved
-// {
-// 	int reserve;
-// 	string pfname;
-// 	string plname;
-// 	string vehicle;
-// 	int location;
-// 	reserved *nextaddr;
-// };
 
 class Car
 {
@@ -137,6 +128,11 @@ passenger *Read(){
 		inFile >> current->fname;
 		inFile >> current->lname;
 		inFile >> current->credit;inFile.ignore();
+		current->reserve=100;
+		current->vehicle="NONE";
+		current->color="NONE";
+		current->location="NONE";
+		current->randomized=false;
 		if (inFile.eof()){
 			current->nextaddr = NULL;
 			break;
@@ -153,7 +149,30 @@ passenger *Read(){
 	return head;
 }
 
+
+void Reservation(passenger *head) {
+	passenger *current=head;
+	ofstream outFile;
+	outFile.open("all_reservations.txt");
+	cout << "file out" << endl;
+	if(current==NULL)
+		outFile<<"NULL"<<endl;
+	else{
+		while (current->nextaddr != NULL)
+		{
+			outFile<< "Passenger (" << current->reserve << ")" << endl;
+			outFile<< "Name: "<< current->lname << ", " << current->fname << endl;
+			outFile<< "Vehicle: " << current->color << " " << current->vehicle << endl;
+			outFile<< "Seat Location: " << current->location << endl;
+			outFile<< "------------------------------------\n";
+			current=current->nextaddr;
+		}
+	}
+	outFile.close();
+}
+
 void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
+//	change passenger->reserved.zero class seats using class functions.specify seats by value
 	string first, last;
 	bool quit=false;
 	passenger *current;
@@ -181,10 +200,10 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 			quit=true;
 		else{
 //			Print();
-			cout << "Choose selection (Category/Seat): ";
+			cout << "Choose selection by category (Vehicle/Seat): ";
 			cin >> select; cin.ignore();
 			select=toupper(select);
-			if(select=='C'){
+			if(select=='V'){
 				for(int i=0;i<3;i++){
 					if(pick[i].front!=0){
 						current->credit-=5;
@@ -522,7 +541,7 @@ int main()
 	sed[2].setCar("BLUE","SEDAN");
 
 	passenger *head = Read();
-	Create(head,pick,comp,sed);
+//	Create(head,pick,comp,sed);
 //	string tmp="Can you Re@d this?";
 //	string tmp2;
 //	cout<<tmp << endl;
@@ -531,5 +550,9 @@ int main()
 //	cout << tmp;
 	cout << head->fname << endl;
 	cout << head->lname << endl;
-	cout << head->credit << endl;
+	cout << "credit" << head->credit << endl;
+	cout << "location" << head->location<<endl;
+	cout << "bool" << head->randomized<<endl;
+	cout << "vehicle" << head->vehicle << endl;
+	cout << "color" << head->color << endl;
 }
