@@ -935,6 +935,7 @@ int main()
 	setSedan(sed[2]);
 	passenger *head = Read();
 	int reserve_num=1;
+	bool running=true;
 
 	//start loop
 	//Print menu
