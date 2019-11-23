@@ -894,6 +894,9 @@ int main()
 	//Pickup		| Completed (M)
 	//Compact		| Completed (M)
 	//Sedan			| Completed (M)
+	//setPickup()	| Completed (M)
+	//setCompact()	| Completed (M)
+	//setSedan()	| Completed (M)
 	//Create()		| Completed (M)
 	//Display()		|
 	//Modify()		| Completed
