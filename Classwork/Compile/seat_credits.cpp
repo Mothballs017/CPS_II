@@ -887,6 +887,84 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 	}while(!quit);
 }
 
+void Print(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int reserve) {
+	string vehicle,color,tmp;
+	cout << "Which vehicle would you like to print?\n";
+	cin>> tmp;
+	for(char x: tmp)
+		color+=toupper(x);
+	tmp=""; //or tmp2???
+	cin>> tmp;
+	for(char x: tmp)
+		vehicle+=toupper(x);
+	tmp="";
+	switch(vehicle){
+		case "PICKUP:
+			switch(color){
+				case: "PURPLE":
+					cout << pick[0].
+						//FUCK I NEED TO GO IN AND TEST THIS SHIT
+					break;
+				case "YELLOW":
+					break;
+				case "RED":
+					break;
+				default: cout << "-INVALID COLOR-\nIncorrect color entered. Please try again." << endl;
+			}
+			break;
+		case "COMPACT":
+			switch(color){
+				case: "GREEN":
+					break;
+				case "BLUE":
+					break;
+				case "YELLOW":
+					break;
+				default: cout << "-INVALID COLOR-\nIncorrect color entered. Please try again." << endl;
+			}
+			break;
+		case "SEDAN":
+			switch(color){
+				case: "RED":
+					break;
+				case "GREEN":
+					break;
+				case "BLUE":
+					break;
+				default: cout << "-INVALID COLOR-\nIncorrect color entered. Please try again." << endl;
+			}
+			break;
+		default: cout << "-INVALID VEHICLE-\nIncorrect vehicle entered. Please try again." << endl;
+	}
+	
+	string password="BATMAN";
+	cout << "Are you the system administrator?\n--Please enter password--" << endl;
+	string check,tmp;
+	cin>>tmp;
+	if(check!=password)
+		cout << "Permission denied" << endl;
+	else{
+		passenger *current=head;
+		ofstream outFile;
+		outFile.open("all_reservations.txt");
+		cout << "file out" << endl;
+		if(current==NULL)
+			outFile<<"NULL"<<endl;
+		else{
+			while (current->nextaddr != NULL)
+			{
+				outFile<< "Passenger (" << current->reserve << ")" << endl;
+				outFile<< "Name: "<< current->lname << ", " << current->fname << endl;
+				outFile<< "Vehicle: " << current->color << " " << current->vehicle << endl;
+				outFile<< "Seat Location: " << current->location << endl;
+				outFile<< "------------------------------------\n";
+				current=current->nextaddr;
+			}
+		}
+		outFile.close();
+	}
+
+}
 int main()
 {
 	//passenger		| Completed (M)
