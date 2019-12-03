@@ -1113,6 +1113,18 @@ void Display(Pickup pick[3],Compact comp[3],Sedan sed[3]){
 	cout << sed[2].SideMiddle() << ")(" << sed[2].SideBack2() << ") "<<endl;
 }
 
+void Menu(){
+	//Menu: Create(head,pick,comp,sed,reserve_num)
+	//		Display()
+	//		Modify(head,pick,comp,sed)
+	//		Delete(head,pick,comp,sed,reserve_num)
+	//		Print()
+	//		Reservation(head)
+	cout << "|1| Create Reservation"<<endl;
+	cout << "|2| Display Vehicles"<<endl;
+	
+}
+
 int main()
 {
 	//passenger		| Completed (M)
@@ -1165,11 +1177,8 @@ int main()
 	Display(pick,comp,sed);
 
 	//start loop
+	while(running){
+		Menu();
+	}
 	//Print menu
-	//Menu: Create(head,pick,comp,sed,reserve_num)
-	//		Display()
-	//		Modify(head,pick,comp,sed)
-	//		Delete(head,pick,comp,sed,reserve_num)
-	//		Print()
-	//		Reservation(head)
 }
