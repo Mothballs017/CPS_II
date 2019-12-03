@@ -1,7 +1,7 @@
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Title: seat_credits.cpp
 // Course: Computational Problem Solving CPET-II
-// Developer: MATTHEW CHU & John Alvarez
+// Developer: MATTHEW CHU
 // Date : Fall 2019 (2191)
 // Description: Problem #2
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -72,11 +72,15 @@ class Car
 };
 
 class Pickup:public Car{
-private:
+public:
 	int front;
+	string name;
 public:
 	Pickup(){ front = 5; }
-
+	void setPickupn(string p)
+	{
+		name = p;
+	}
 	void setPickup(int f=0)
 	{
 		front = f;
@@ -87,11 +91,21 @@ public:
 };
 
 class Compact:public Car{
-private:
-	int front,back1,back2;
 public:
-	friend setCompact(Compact);
+	int front,back1,back2;
+	string fname,b1name,b2name;
+public:
+	friend Compact setCompact(Compact C);
 
+	void setCompactfn(string c){
+		fname = c;
+	}
+	void setCompactb1n(string c){
+		b1name = c;
+	}
+	void setCompactb2n(string c){
+		b2name = c;
+	}
 	void setCompactf(int f=0){
 		front = f;
 	}
@@ -113,18 +127,25 @@ public:
 };
 
 class Sedan:public Car{
-private:
+public:
 	int front,sideback1,sideback2,sidemiddle;
+	string fname,sb1name,sb2name,smname;
 public:
 	Sedan(){ front = 5; sideback1=2; sideback2=2; sidemiddle=1; }
 
-	void setSedan(int f=0, int sb1=0, int sb2=0, int sm=0)
-	{
-		front = f;
-		sideback1 = sb1;
-		sideback2 = sb2;
-		sidemiddle = sm;
-		return;
+	friend Sedan setSedan(Sedan S);
+
+	void setSedanfn(string s){
+		fname = s;
+	}
+	void setSedansb1n(string s){
+		sb1name = s;
+	}
+	void setSedansb2n(string s){
+		sb2name = s;
+	}
+	void setSedansmn(string s){
+		smname = s;
 	}
 	void setSedanf(int f=0){
 		front = f;
@@ -155,22 +176,24 @@ public:
 void setPickup(Pickup P){
 	P.front = 5;
 }
-void setCompact(Compact C){
+Compact setCompact(Compact C){
 	C.front = 5;
 	C.back1 = 3;
 	C.back2 = 3;
+	return C;
 }
-void setSedan(Sedan S){
+Sedan setSedan(Sedan S){
 	S.front = 5;
 	S.sideback1 = 2;
 	S.sidemiddle = 1;
 	S.sideback2 = 2;
+	return S;
 }
 
 bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], int reserve){
 	bool quit=false;
 	int car_num,seat;
-//	Print();
+	//	Print();
 	cout << "Select vehicle type by number (1-3): ";
 	cin >> car_num; cin.ignore();
 	string tmp,color;
@@ -186,6 +209,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 				if(pick[0].Front()!=0){
 					current->credit-=5;
 					pick[0].setPickup();
+					pick[0].setPickupn(current->fname+" "+current->lname);
 					current->vehicle=pick[0].Type();
 					current->color=pick[0].Color();
 					current->location="FRONT";
@@ -198,6 +222,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 				if(pick[1].Front()!=0){
 					current->credit-=5;
 					pick[1].setPickup();
+					pick[1].setPickupn(current->fname+" "+current->lname);
 					current->vehicle=pick[1].Type();
 					current->color=pick[1].Color();
 					current->location="FRONT";
@@ -210,6 +235,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 				if(pick[2].Front()!=0){
 					current->credit-=5;
 					pick[2].setPickup();
+					pick[2].setPickupn(current->fname+" "+current->lname);
 					current->vehicle=pick[2].Type();
 					current->color=pick[2].Color();
 					current->location="FRONT";
@@ -217,9 +243,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 					quit=!quit;
 				}
 				else cout<<"Front seat occupied. Please reselect." << endl;
-			}else{
-				cout << "-INVALID COLOR-\nPlease reselect." << endl;
-			}
+			}else cout << "-INVALID COLOR-\nPlease reselect." << endl;
 		}
 	}
 	if(car_num==2){
@@ -233,10 +257,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 			if(color=="GREEN"){
 				cout<<"Enter seat (1-3): ";
 				cin>>seat;cin.ignore();
-				if(seat==1){
+				switch(seat){
+				case 1:
 					if(comp[0].Front()!=0){
 						current->credit-=5;
 						comp[0].setCompactf();
+						comp[0].setCompactfn(current->fname+" "+current->lname);
 						current->vehicle=comp[0].Type();
 						current->color=comp[0].Color();
 						current->location="FRONT";
@@ -244,11 +270,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Front seat occupied. Please reselect." << endl;
-				}
-				if(seat==2){
+					break;
+				case 2:
 					if(comp[0].Back1()!=0){
 						current->credit-=3;
 						comp[0].setCompactb1();
+						comp[0].setCompactb1n(current->fname+" "+current->lname);
 						current->vehicle=comp[0].Type();
 						current->color=comp[0].Color();
 						current->location="LEFT BACK";
@@ -256,11 +283,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Left back seat occupied. Please reselect." << endl;
-				}
-				if(seat==3){
+					break;
+				case 3:
 					if(comp[0].Back2()!=0){
 						current->credit-=3;
 						comp[0].setCompactb2();
+						comp[0].setCompactb2n(current->fname+" "+current->lname);
 						current->vehicle=comp[0].Type();
 						current->color=comp[0].Color();
 						current->location="RIGHT BACK";
@@ -268,15 +296,21 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Right back seat occupied. Please reselect." << endl;
-				}else cout << "-INVALID SEAT-\nPlease reselect."<<endl;
+					break;
+				default:
+					cout << "-INVALID SEAT-\nPlease reselect."<<endl;
+					break;
+				}
 			}
 			if(color=="BLUE"){
 				cout<<"Enter seat (1-3): ";
 				cin>>seat;cin.ignore();
-				if(seat==1){
+				switch(seat){
+				case 1:
 					if(comp[1].Front()!=0){
 						current->credit-=5;
 						comp[1].setCompactf();
+						comp[1].setCompactfn(current->fname+" "+current->lname);
 						current->vehicle=comp[1].Type();
 						current->color=comp[1].Color();
 						current->location="FRONT";
@@ -284,11 +318,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Front seat occupied. Please reselect." << endl;
-				}
-				if(seat==2){
+					break;
+				case 2:
 					if(comp[1].Back1()!=0){
 						current->credit-=3;
 						comp[1].setCompactb1();
+						comp[1].setCompactb1n(current->fname+" "+current->lname);
 						current->vehicle=comp[1].Type();
 						current->color=comp[1].Color();
 						current->location="LEFT BACK";
@@ -296,11 +331,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Left back seat occupied. Please reselect." << endl;
-				}
-				if(seat==3){
+					break;
+				case 3:
 					if(comp[1].Back2()!=0){
 						current->credit-=3;
 						comp[1].setCompactb2();
+						comp[1].setCompactb2n(current->fname+" "+current->lname);
 						current->vehicle=comp[1].Type();
 						current->color=comp[1].Color();
 						current->location="RIGHT BACK";
@@ -308,15 +344,21 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Right back seat occupied. Please reselect." << endl;
-				}else cout <<"-INVALID SEAT-\nPlease reselect."<<endl;
+					break;
+				default:
+					cout <<"-INVALID SEAT-\nPlease reselect."<<endl;
+					break;
+				}
 			}
 			if(color=="YELLOW"){
 				cout<<"Enter seat (1-3): ";
 				cin>>seat;cin.ignore();
-				if(seat==1){
+				switch(seat){
+				case 1:
 					if(comp[2].Front()!=0){
 						current->credit-=5;
 						comp[2].setCompactf();
+						comp[2].setCompactfn(current->fname+" "+current->lname);
 						current->vehicle=comp[2].Type();
 						current->color=comp[2].Color();
 						current->location="FRONT";
@@ -324,11 +366,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Front seat occupied. Please reselect." << endl;
-				}
-				if(seat==2){
+					break;
+				case 2:
 					if(comp[2].Back1()!=0){
 						current->credit-=3;
 						comp[2].setCompactb1();
+						comp[2].setCompactb1n(current->fname+" "+current->lname);
 						current->vehicle=comp[2].Type();
 						current->color=comp[2].Color();
 						current->location="LEFT BACK";
@@ -336,11 +379,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Left back seat occupied. Please reselect." << endl;
-				}
-				if(seat==3){
+					break;
+				case 3:
 					if(comp[2].Back2()!=0){
 						current->credit-=3;
 						comp[2].setCompactb2();
+						comp[2].setCompactb2n(current->fname+" "+current->lname);
 						current->vehicle=comp[2].Type();
 						current->color=comp[2].Color();
 						current->location="RIGHT BACK";
@@ -348,10 +392,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Right back seat occupied. Please reselect." << endl;
-				}else cout<<"-INVALID SEAT-\nPlease reselect."<<endl;
-			}else{
-				cout << "-INVALID COLOR-\nPlease reselect." << endl;
-			}
+					break;
+				default:
+					cout<<"-INVALID SEAT-\nPlease reselect."<<endl;
+					break;
+				}
+			}else cout << "-INVALID COLOR-\nPlease reselect." << endl;
 		}
 	}
 	if(car_num==3){
@@ -365,10 +411,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 			if(color=="RED"){
 				cout<<"Enter seat (1-4): ";
 				cin>>seat;cin.ignore();
-				if(seat==1){
+				switch(seat){
+				case 1:
 					if(sed[0].Front()!=0){
 						current->credit-=5;
 						sed[0].setSedanf();
+						sed[0].setSedanfn(current->fname+" "+current->lname);
 						current->vehicle=sed[0].Type();
 						current->color=sed[0].Color();
 						current->location="FRONT";
@@ -376,11 +424,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Front seat occupied. Please reselect." << endl;
-				}
-				if(seat==2){
+					break;
+				case 2:
 					if(sed[0].SideBack1()!=0){
 						current->credit-=2;
 						sed[0].setSedansb1();
+						sed[0].setSedansb1n(current->fname+" "+current->lname);
 						current->vehicle=sed[0].Type();
 						current->color=sed[0].Color();
 						current->location="LEFT SIDEBACK";
@@ -388,11 +437,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Left back seat occupied. Please reselect." << endl;
-				}
-				if(seat==3){
+					break;
+				case 3:
 					if(sed[0].SideMiddle()!=0){
 						current->credit-=1;
 						sed[0].setSedansm();
+						sed[0].setSedansmn(current->fname+" "+current->lname);
 						current->vehicle=sed[0].Type();
 						current->color=sed[0].Color();
 						current->location="MIDDLE BACK";
@@ -400,11 +450,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Middle back seat occupied. Please reselect." << endl;
-				}
-				if(seat==4){
+					break;
+				case 4:
 					if(sed[0].SideBack2()!=0){
 						current->credit-=2;
 						sed[0].setSedansb2();
+						sed[0].setSedansb2n(current->fname+" "+current->lname);
 						current->vehicle=sed[0].Type();
 						current->color=sed[0].Color();
 						current->location="RIGHT SIDEBACK";
@@ -412,15 +463,21 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Right back seat occupied. Please reselect." << endl;
-				}else cout << "-INVALID SEAT-\nPlease reselect."<<endl;
+					break;
+				default:
+					cout << "-INVALID SEAT-\nPlease reselect."<<endl;
+					break;
+				}
 			}
 			if(color=="GREEN"){
 				cout<<"Enter seat (1-4): ";
 				cin>>seat;cin.ignore();
-				if(seat==1){
+				switch(seat){
+				case 1:
 					if(sed[1].Front()!=0){
 						current->credit-=5;
 						sed[1].setSedanf();
+						sed[1].setSedanfn(current->fname+" "+current->lname);
 						current->vehicle=sed[1].Type();
 						current->color=sed[1].Color();
 						current->location="FRONT";
@@ -428,11 +485,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Front seat occupied. Please reselect." << endl;
-				}
-				if(seat==2){
+					break;
+				case 2:
 					if(sed[1].SideBack1()!=0){
 						current->credit-=2;
 						sed[1].setSedansb1();
+						sed[1].setSedansb1n(current->fname+" "+current->lname);
 						current->vehicle=sed[1].Type();
 						current->color=sed[1].Color();
 						current->location="LEFT SIDEBACK";
@@ -440,11 +498,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Left back seat occupied. Please reselect." << endl;
-				}
-				if(seat==3){
+					break;
+				case 3:
 					if(sed[1].SideMiddle()!=0){
 						current->credit-=1;
 						sed[1].setSedansm();
+						sed[1].setSedansmn(current->fname+" "+current->lname);
 						current->vehicle=sed[1].Type();
 						current->color=sed[1].Color();
 						current->location="MIDDLE BACK";
@@ -452,11 +511,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Middle back seat occupied. Please reselect." << endl;
-				}
-				if(seat==4){
+					break;
+				case 4:
 					if(sed[1].SideBack2()!=0){
 						current->credit-=2;
 						sed[1].setSedansb2();
+						sed[1].setSedansb2n(current->fname+" "+current->lname);
 						current->vehicle=sed[1].Type();
 						current->color=sed[1].Color();
 						current->location="RIGHT SIDEBACK";
@@ -464,15 +524,21 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Right back seat occupied. Please reselect." << endl;
-				}else cout << "-INVALID SEAT-\nPlease reselect."<<endl;
+					break;
+				default:
+					cout << "-INVALID SEAT-\nPlease reselect."<<endl;
+					break;
+				}
 			}
 			if(color=="BLUE"){
 				cout<<"Enter seat (1-4): ";
 				cin>>seat;cin.ignore();
-				if(seat==1){
+				switch(seat){
+				case 1:
 					if(sed[2].Front()!=0){
 						current->credit-=5;
 						sed[2].setSedanf();
+						sed[2].setSedanfn(current->fname+" "+current->lname);
 						current->vehicle=sed[2].Type();
 						current->color=sed[2].Color();
 						current->location="FRONT";
@@ -480,11 +546,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Front seat occupied. Please reselect." << endl;
-				}
-				if(seat==2){
+					break;
+				case 2:
 					if(sed[2].SideBack1()!=0){
 						current->credit-=2;
 						sed[2].setSedansb1();
+						sed[2].setSedansb1n(current->fname+" "+current->lname);
 						current->vehicle=sed[2].Type();
 						current->color=sed[2].Color();
 						current->location="LEFT SIDEBACK";
@@ -492,11 +559,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Left back seat occupied. Please reselect." << endl;
-				}
-				if(seat==3){
+					break;
+				case 3:
 					if(sed[2].SideMiddle()!=0){
 						current->credit-=1;
 						sed[2].setSedansm();
+						sed[2].setSedansmn(current->fname+" "+current->lname);
 						current->vehicle=sed[2].Type();
 						current->color=sed[2].Color();
 						current->location="MIDDLE BACK";
@@ -504,11 +572,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Middle back seat occupied. Please reselect." << endl;
-				}
-				if(seat==4){
+					break;
+				case 4:
 					if(sed[2].SideBack2()!=0){
 						current->credit-=2;
 						sed[2].setSedansb2();
+						sed[2].setSedansb2n(current->fname+" "+current->lname);
 						current->vehicle=sed[2].Type();
 						current->color=sed[2].Color();
 						current->location="RIGHT SIDEBACK";
@@ -516,10 +585,12 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						quit=!quit;
 					}
 					else cout<<"Right back seat occupied. Please reselect." << endl;
-				}else cout << "-INVALID SEAT-\nPlease reselect."<<endl;
-			}else{
-				cout << "-INVALID COLOR-\nPlease reselect." << endl;
-			}
+					break;
+				default:
+					cout << "-INVALID SEAT-\nPlease reselect."<<endl;
+					break;
+				}
+			}else cout << "-INVALID COLOR-\nPlease reselect." << endl;
 		}
 	}else{
 		cout<<"-INVALID VEHICLE-\nPlease reselect."<<endl;
@@ -662,7 +733,7 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 			quit=true;
 		}
 		else{
-//			Print();
+			Display(pick,comp,sed);
 			cout << "Choose selection by category (Vehicle/Seat): ";
 			cin >> select; cin.ignore();
 			select=toupper(select);
@@ -671,6 +742,7 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 					if(pick[i].Front()!=0){
 						current->credit-=5;
 						pick[i].setPickup();
+						pick[i].setPickupn(current->fname+" "+current->lname);
 						current->vehicle=pick[i].Front();
 						current->color=pick[i].Color();
 						current->location="FRONT";
@@ -681,6 +753,7 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 						if(comp[i].Front()!=0){
 							current->credit-=5;
 							comp[i].setCompactf();
+							comp[i].setCompactfn(current->fname+" "+current->lname);
 							current->vehicle=comp[i].Type();
 							current->color=comp[i].Color();
 							current->location="FRONT";
@@ -691,6 +764,7 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 							if(sed[i].Front()!=0){
 								current->credit-=5;
 								sed[i].setSedanf();
+								sed[i].setSedanfn(current->fname+" "+current->lname);
 								current->vehicle=sed[i].Type();
 								current->color=sed[i].Color();
 								current->location="FRONT";
@@ -750,6 +824,7 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 							if(pick[i].Color()==current->color){
 								color_check=true;
 								pick[i].setPickup(5);
+								pick[i].setPickupn(" ");
 							}
 						}
 						if(color_check==true){
@@ -779,6 +854,7 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 							if(current->location=="FRONT"){
 								credit=5;
 								comp[i].setCompactf(credit);
+								comp[i].setCompactfn(" ");
 								update=current->reserve;
 								current->location="NONE";
 								current->color="NONE";
@@ -789,6 +865,7 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 							if(current->location=="LEFT BACK"){
 								credit=3;
 								comp[i].setCompactb1(credit);
+								comp[i].setCompactb1n(" ");
 								update=current->reserve;
 								current->location="NONE";
 								current->color="NONE";
@@ -799,6 +876,7 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 							if(current->location=="RIGHT BACK"){
 								credit=3;
 								comp[i].setCompactb2(credit);
+								comp[i].setCompactb2n(" ");
 								update=current->reserve;
 								current->location="NONE";
 								current->color="NONE";
@@ -824,6 +902,7 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 							if(current->location=="FRONT"){
 								credit=5;
 								sed[i].setSedanf(credit);
+								sed[i].setSedanfn(" ");
 								update=current->reserve;
 								current->location="NONE";
 								current->color="NONE";
@@ -834,6 +913,7 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 							if(current->location=="LEFT SIDEBACK"){
 								credit=2;
 								sed[i].setSedansb1(credit);
+								sed[i].setSedansb1n(" ");
 								update=current->reserve;
 								current->location="NONE";
 								current->color="NONE";
@@ -844,6 +924,7 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 							if(current->location=="MIDDLE BACK"){
 								credit=1;
 								sed[i].setSedansm(credit);
+								sed[i].setSedansmn(" ");
 								update=current->reserve;
 								current->location="NONE";
 								current->color="NONE";
@@ -854,6 +935,7 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 							if(current->location=="RIGHT SIDEBACK"){
 								credit=2;
 								sed[i].setSedansb2(credit);
+								sed[i].setSedansb2n(" ");
 								update=current->reserve;
 								current->location="NONE";
 								current->color="NONE";
@@ -887,84 +969,150 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 	}while(!quit);
 }
 
-void Print(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int reserve) {
-	string vehicle,color,tmp;
+void Print(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], int reserve) {
+	string vehicle,color,tmp,tmp2,seat;
 	cout << "Which vehicle would you like to print?\n";
 	cin>> tmp;
+	cin>> tmp2;
 	for(char x: tmp)
-		color+=toupper(x);
-	tmp=""; //or tmp2???
-	cin>> tmp;
-	for(char x: tmp)
-		vehicle+=toupper(x);
-	tmp="";
-	switch(vehicle){
-		case "PICKUP:
-			switch(color){
-				case: "PURPLE":
-					cout << pick[0].
-						//FUCK I NEED TO GO IN AND TEST THIS SHIT
-					break;
-				case "YELLOW":
-					break;
-				case "RED":
-					break;
-				default: cout << "-INVALID COLOR-\nIncorrect color entered. Please try again." << endl;
-			}
-			break;
-		case "COMPACT":
-			switch(color){
-				case: "GREEN":
-					break;
-				case "BLUE":
-					break;
-				case "YELLOW":
-					break;
-				default: cout << "-INVALID COLOR-\nIncorrect color entered. Please try again." << endl;
-			}
-			break;
-		case "SEDAN":
-			switch(color){
-				case: "RED":
-					break;
-				case "GREEN":
-					break;
-				case "BLUE":
-					break;
-				default: cout << "-INVALID COLOR-\nIncorrect color entered. Please try again." << endl;
-			}
-			break;
-		default: cout << "-INVALID VEHICLE-\nIncorrect vehicle entered. Please try again." << endl;
-	}
-	
-	string password="BATMAN";
-	cout << "Are you the system administrator?\n--Please enter password--" << endl;
-	string check,tmp;
-	cin>>tmp;
-	if(check!=password)
-		cout << "Permission denied" << endl;
-	else{
-		passenger *current=head;
-		ofstream outFile;
-		outFile.open("all_reservations.txt");
-		cout << "file out" << endl;
-		if(current==NULL)
-			outFile<<"NULL"<<endl;
-		else{
-			while (current->nextaddr != NULL)
-			{
-				outFile<< "Passenger (" << current->reserve << ")" << endl;
-				outFile<< "Name: "<< current->lname << ", " << current->fname << endl;
-				outFile<< "Vehicle: " << current->color << " " << current->vehicle << endl;
-				outFile<< "Seat Location: " << current->location << endl;
-				outFile<< "------------------------------------\n";
-				current=current->nextaddr;
-			}
+		color+=tolower(x);
+	for(char x: tmp2)
+		vehicle+=tolower(x);
+	ofstream outFile;
+	outFile.open(color+"_"+vehicle+".txt");
+	outFile<< "Vehicle: "+color+" "+vehicle << endl;
+	if(vehicle=="pickup"){
+		if(color=="purple"){
+			cout << color+" "+vehicle+"\n" << "Front: " << pick[0].name << endl;
+			outFile<< "Front: " << pick[0].name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
 		}
-		outFile.close();
+		if(color=="yellow"){
+			cout << color+" "+vehicle+"\n" << "Front: " << pick[1].name << endl;
+			outFile<< "Front: " << pick[1].name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+		}
+		if(color=="red"){
+			cout << color+" "+vehicle+"\n" << "Front: " << pick[2].name << endl;
+			outFile<< "Front: " << pick[2].name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+		}else cout << "-INVALID COLOR-\nIncorrect color entered. Please try again." << endl;
 	}
-
+	if(vehicle=="compact"){
+		if(color=="green"){
+			cout << color+" "+vehicle+"\n" << "Front: " << comp[0].fname << "\nLeft Back: ";
+			cout << comp[0].b1name << "\nRight Back: " << comp[0].b2name << endl;
+			outFile<< "Front: " << comp[0].fname << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Left Back: " << comp[0].b1name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Right Back: " << comp[0].b2name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+		}
+		if(color=="blue"){
+			cout << color+" "+vehicle+"\n" << "Front: " << comp[1].fname << "\nLeft Back: ";
+			cout << comp[1].b1name << "\nRight Back: " << comp[1].b2name << endl;
+			outFile<< "Front: " << comp[1].fname << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Left Back: " << comp[1].b1name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Right Back: " << comp[1].b2name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+		}
+		if(color=="yellow"){
+			cout << color+" "+vehicle+"\n" << "Front: " << comp[2].fname << "\nLeft Back: ";
+			cout << comp[2].b1name << "\nRight Back: " << comp[2].b2name << endl;
+			outFile<< "Front: " << comp[2].fname << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Left Back: " << comp[2].b1name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Right Back: " << comp[2].b2name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+		}else cout << "-INVALID COLOR-\nIncorrect color entered. Please try again." << endl;
+	}
+	if(vehicle=="sedan"){
+		if(color=="red"){
+			cout << color+" "+vehicle+"\n" << "Front: " << sed[0].fname << "\nLeft Back: ";
+			cout << sed[0].sb1name << "\nMiddle Back: " << sed[0].smname << "\nRight Back: " << sed[0].sb2name << endl;
+			outFile<< "Front: " << sed[0].fname << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Left Back: " << sed[0].sb1name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Middle Back: " << sed[0].smname << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Right Back: " << sed[0].sb2name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+		}
+		if(color=="green"){
+			cout << color+" "+vehicle+"\n" << "Front: " << sed[0].fname << "\nLeft Back: ";
+			cout << sed[0].sb1name << "\nMiddle Back: " << sed[0].smname << "\nRight Back: " << sed[0].sb2name << endl;
+			outFile<< "Front: " << sed[0].fname << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Left Back: " << sed[0].sb1name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Middle Back: " << sed[0].smname << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Right Back: " << sed[0].sb2name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+		}
+		if(color=="blue"){
+			cout << color+" "+vehicle+"\n" << "Front: " << sed[0].fname << "\nLeft Back: ";
+			cout << sed[0].sb1name << "\nMiddle Back: " << sed[0].smname << "\nRight Back: " << sed[0].sb2name << endl;
+			outFile<< "Front: " << sed[0].fname << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Left Back: " << sed[0].sb1name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Middle Back: " << sed[0].smname << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+			outFile<< "Right Back: " << sed[0].sb2name << endl;
+			outFile<< "Reserve #: "<< current->reserve << endl;
+			outFile<< "------------------------------------\n";
+		}else cout << "-INVALID COLOR-\nIncorrect color entered. Please try again." << endl;
+	}else cout << "-INVALID VEHICLE-\nIncorrect vehicle entered. Please try again." << endl;
+	outFile.close();
 }
+
+void Display(Pickup pick[3],Compact comp[3],Sedan sed[3]){
+	cout << "\n";
+	cout << "   Truck   Compact     Sedan" << endl;
+	cout << "   -----   -------     -----" << endl;
+	cout << "  " << pick[0].Color() << "    " << comp[0].Color() << "       " << sed[0].Color() << endl;
+	cout << "  (-)(" << pick[0].Front() << ")   (-) (" << comp[0].Front() << ")   (-)   (" << sed[0].Front() << ") "<<endl;
+	cout << "           (" << comp[0].Back1() << ") (" << comp[0].Back2() << ")   (" << sed[0].SideBack1() << ")(";
+	cout << sed[0].SideMiddle() << ")(" << sed[0].SideBack2() << ") "<<endl;
+	cout << "  " << pick[1].Color() << "     " << comp[1].Color() << "      " << sed[1].Color() << endl;
+	cout << "  (-)(" << pick[1].Front() << ")   (-) (" << comp[1].Front() << ")   (-)   (" << sed[1].Front() << ") "<<endl;
+	cout << "           (" << comp[1].Back1() << ") (" << comp[1].Back2() << ")   (" << sed[1].SideBack1() << ")(";
+	cout << sed[1].SideMiddle() << ")(" << sed[1].SideBack2() << ") "<<endl;
+	cout << "   " << pick[2].Color() << "      " << comp[2].Color() << "     " << sed[2].Color() << endl;
+	cout << "  (-)(" << pick[2].Front() << ")   (-) (" << comp[2].Front() << ")   (-)   (" << sed[2].Front() << ") "<<endl;
+	cout << "           (" << comp[2].Back1() << ") (" << comp[2].Back2() << ")   (" << sed[2].SideBack1() << ")(";
+	cout << sed[2].SideMiddle() << ")(" << sed[2].SideBack2() << ") "<<endl;
+}
+
 int main()
 {
 	//passenger		| Completed (M)
@@ -977,9 +1125,9 @@ int main()
 	//setSedan()	| Completed (M)
 	//Create()		| Completed (M)
 	//Display()		|
-	//Modify()		| Completed
+	//Modify()		| Completed (M)
 	//Delete() 		| Completed (M)
-	//Print()		|
+	//Print()		| Completed (M)
 	//Reservation()	| Completed (M)
 
 	//Select()		| Completed (M)
@@ -999,21 +1147,22 @@ int main()
 	setPickup(pick[2]);
 	Compact comp[3];
 	comp[0].setCar("GREEN","COMPACT");
-	setCompact(comp[0]);
+	comp[0]=setCompact(comp[0]);
 	comp[1].setCar("BLUE","COMPACT");
-	setCompact(comp[1]);
+	comp[1]=setCompact(comp[1]);
 	comp[2].setCar("YELLOW","COMPACT");
-	setCompact(comp[2]);
+	comp[2]=setCompact(comp[2]);
 	Sedan sed[3];
 	sed[0].setCar("RED","SEDAN");
-	setSedan(sed[0]);
+	sed[0]=setSedan(sed[0]);
 	sed[1].setCar("GREEN","SEDAN");
-	setSedan(sed[1]);
+	sed[1]=setSedan(sed[1]);
 	sed[2].setCar("BLUE","SEDAN");
-	setSedan(sed[2]);
+	sed[2]=setSedan(sed[2]);
 	passenger *head = Read();
 	int reserve_num=1;
 	bool running=true;
+	Display(pick,comp,sed);
 
 	//start loop
 	//Print menu
