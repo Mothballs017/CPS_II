@@ -20,6 +20,7 @@ struct passenger
 	string color;
 	string location;
 	bool randomized=false;
+	bool assigned=false;
 	passenger *nextaddr;
 };
 
