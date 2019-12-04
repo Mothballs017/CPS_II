@@ -77,6 +77,7 @@ int main()
 		switch(menu_select){
 		case 1:
 			Create(head,pick,comp,sed,reserve_num);
+			reserve_num++;
 			break;
 		case 2:
 			Display(pick,comp,sed);
