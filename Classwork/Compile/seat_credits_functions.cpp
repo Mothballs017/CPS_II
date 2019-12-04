@@ -34,6 +34,12 @@ Sedan setSedan(Sedan S){
 	return S;
 }
 
+int getCount(passenger *head){
+    if (head == NULL)
+        return 0;
+    return getCount(head->nextaddr)+1;
+}
+
 bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], int reserve){
 	bool quit=false;
 	int seat;
@@ -56,6 +62,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 					current->credit-=5;
 					pick[0].setPickup();
 					pick[0].setPickupn(current->fname+" "+current->lname);
+					cout << current->fname << " has been assigned to "<<pick[0].Color() <<" PICKUP's FRONT seat."<<endl;
 					current->vehicle=pick[0].Type();
 					current->color=pick[0].Color();
 					current->location="FRONT";
@@ -70,6 +77,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						current->credit-=5;
 						pick[1].setPickup();
 						pick[1].setPickupn(current->fname+" "+current->lname);
+						cout << current->fname << " has been assigned to "<<pick[1].Color() <<" PICKUP's FRONT seat."<<endl;
 						current->vehicle=pick[1].Type();
 						current->color=pick[1].Color();
 						current->location="FRONT";
@@ -84,6 +92,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 							current->credit-=5;
 							pick[2].setPickup();
 							pick[2].setPickupn(current->fname+" "+current->lname);
+							cout << current->fname << " has been assigned to "<<pick[2].Color() <<" PICKUP's FRONT seat."<<endl;
 							current->vehicle=pick[2].Type();
 							current->color=pick[2].Color();
 							current->location="FRONT";
@@ -114,6 +123,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 							current->credit-=5;
 							comp[0].setCompactf();
 							comp[0].setCompactfn(current->fname+" "+current->lname);
+							cout << current->fname << " has been assigned to "<<comp[0].Color() <<" COMPACT's FRONT seat."<<endl;
 							current->vehicle=comp[0].Type();
 							current->color=comp[0].Color();
 							current->location="FRONT";
@@ -128,6 +138,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 							current->credit-=3;
 							comp[0].setCompactb1();
 							comp[0].setCompactb1n(current->fname+" "+current->lname);
+							cout << current->fname << " has been assigned to "<<comp[0].Color() <<" COMPACT's LEFT BACK seat."<<endl;
 							current->vehicle=comp[0].Type();
 							current->color=comp[0].Color();
 							current->location="LEFT BACK";
@@ -142,6 +153,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 							current->credit-=3;
 							comp[0].setCompactb2();
 							comp[0].setCompactb2n(current->fname+" "+current->lname);
+							cout << current->fname << " has been assigned to "<<comp[0].Color() <<" COMPACT's RIGHT BACK seat."<<endl;
 							current->vehicle=comp[0].Type();
 							current->color=comp[0].Color();
 							current->location="RIGHT BACK";
@@ -156,108 +168,118 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 						break;
 					}
 				}
-				if(color=="BLUE"){
-					cout<<"Enter seat (1-3): ";
-					cin>>seat;cin.ignore();
-					switch(seat){
-					case 1:
-						if(comp[1].Front()!=0){
-							current->credit-=5;
-							comp[1].setCompactf();
-							comp[1].setCompactfn(current->fname+" "+current->lname);
-							current->vehicle=comp[1].Type();
-							current->color=comp[1].Color();
-							current->location="FRONT";
-							current->reserve=reserve;
-							current->assigned=true;
-							quit=!quit;
+				else{
+					if(color=="BLUE"){
+						cout<<"Enter seat (1-3): ";
+						cin>>seat;cin.ignore();
+						switch(seat){
+						case 1:
+							if(comp[1].Front()!=0){
+								current->credit-=5;
+								comp[1].setCompactf();
+								comp[1].setCompactfn(current->fname+" "+current->lname);
+								cout << current->fname << " has been assigned to "<<comp[1].Color() <<" COMPACT's FRONT seat."<<endl;
+								current->vehicle=comp[1].Type();
+								current->color=comp[1].Color();
+								current->location="FRONT";
+								current->reserve=reserve;
+								current->assigned=true;
+								quit=!quit;
+							}
+							else cout<<"Front seat occupied. Please reselect." << endl;
+							break;
+						case 2:
+							if(comp[1].Back1()!=0){
+								current->credit-=3;
+								comp[1].setCompactb1();
+								comp[1].setCompactb1n(current->fname+" "+current->lname);
+								cout << current->fname << " has been assigned to "<<comp[1].Color() <<" COMPACT's LEFT BACK seat."<<endl;
+								current->vehicle=comp[1].Type();
+								current->color=comp[1].Color();
+								current->location="LEFT BACK";
+								current->reserve=reserve;
+								current->assigned=true;
+								quit=!quit;
+							}
+							else cout<<"Left back seat occupied. Please reselect." << endl;
+							break;
+						case 3:
+							if(comp[1].Back2()!=0){
+								current->credit-=3;
+								comp[1].setCompactb2();
+								comp[1].setCompactb2n(current->fname+" "+current->lname);
+								cout << current->fname << " has been assigned to "<<comp[1].Color() <<" COMPACT's RIGHT BACK seat."<<endl;
+								current->vehicle=comp[1].Type();
+								current->color=comp[1].Color();
+								current->location="RIGHT BACK";
+								current->reserve=reserve;
+								current->assigned=true;
+								quit=!quit;
+							}
+							else cout<<"Right back seat occupied. Please reselect." << endl;
+							break;
+						default:
+							cout <<"-INVALID SEAT-\nPlease reselect."<<endl;
+							break;
 						}
-						else cout<<"Front seat occupied. Please reselect." << endl;
-						break;
-					case 2:
-						if(comp[1].Back1()!=0){
-							current->credit-=3;
-							comp[1].setCompactb1();
-							comp[1].setCompactb1n(current->fname+" "+current->lname);
-							current->vehicle=comp[1].Type();
-							current->color=comp[1].Color();
-							current->location="LEFT BACK";
-							current->reserve=reserve;
-							current->assigned=true;
-							quit=!quit;
-						}
-						else cout<<"Left back seat occupied. Please reselect." << endl;
-						break;
-					case 3:
-						if(comp[1].Back2()!=0){
-							current->credit-=3;
-							comp[1].setCompactb2();
-							comp[1].setCompactb2n(current->fname+" "+current->lname);
-							current->vehicle=comp[1].Type();
-							current->color=comp[1].Color();
-							current->location="RIGHT BACK";
-							current->reserve=reserve;
-							current->assigned=true;
-							quit=!quit;
-						}
-						else cout<<"Right back seat occupied. Please reselect." << endl;
-						break;
-					default:
-						cout <<"-INVALID SEAT-\nPlease reselect."<<endl;
-						break;
+					}
+					else{
+						if(color=="YELLOW"){
+							cout<<"Enter seat (1-3): ";
+							cin>>seat;cin.ignore();
+							switch(seat){
+							case 1:
+								if(comp[2].Front()!=0){
+									current->credit-=5;
+									comp[2].setCompactf();
+									comp[2].setCompactfn(current->fname+" "+current->lname);
+									cout << current->fname << " has been assigned to "<<comp[2].Color() <<" COMPACT's FRONT seat."<<endl;
+									current->vehicle=comp[2].Type();
+									current->color=comp[2].Color();
+									current->location="FRONT";
+									current->reserve=reserve;
+									current->assigned=true;
+									quit=!quit;
+								}
+								else cout<<"Front seat occupied. Please reselect." << endl;
+								break;
+							case 2:
+								if(comp[2].Back1()!=0){
+									current->credit-=3;
+									comp[2].setCompactb1();
+									comp[2].setCompactb1n(current->fname+" "+current->lname);
+									cout << current->fname << " has been assigned to "<<comp[2].Color() <<" COMPACT's LEFT BACK seat."<<endl;
+									current->vehicle=comp[2].Type();
+									current->color=comp[2].Color();
+									current->location="LEFT BACK";
+									current->reserve=reserve;
+									current->assigned=true;
+									quit=!quit;
+								}
+								else cout<<"Left back seat occupied. Please reselect." << endl;
+								break;
+							case 3:
+								if(comp[2].Back2()!=0){
+									current->credit-=3;
+									comp[2].setCompactb2();
+									comp[2].setCompactb2n(current->fname+" "+current->lname);
+									cout << current->fname << " has been assigned to "<<comp[2].Color() <<" COMPACT's RIGHT BACK seat."<<endl;
+									current->vehicle=comp[2].Type();
+									current->color=comp[2].Color();
+									current->location="RIGHT BACK";
+									current->reserve=reserve;
+									current->assigned=true;
+									quit=!quit;
+								}
+								else cout<<"Right back seat occupied. Please reselect." << endl;
+								break;
+							default:
+								cout<<"-INVALID SEAT-\nPlease reselect."<<endl;
+								break;
+							}
+						}else cout << "-INVALID COLOR-\nPlease reselect." << endl;
 					}
 				}
-				if(color=="YELLOW"){
-					cout<<"Enter seat (1-3): ";
-					cin>>seat;cin.ignore();
-					switch(seat){
-					case 1:
-						if(comp[2].Front()!=0){
-							current->credit-=5;
-							comp[2].setCompactf();
-							comp[2].setCompactfn(current->fname+" "+current->lname);
-							current->vehicle=comp[2].Type();
-							current->color=comp[2].Color();
-							current->location="FRONT";
-							current->reserve=reserve;
-							current->assigned=true;
-							quit=!quit;
-						}
-						else cout<<"Front seat occupied. Please reselect." << endl;
-						break;
-					case 2:
-						if(comp[2].Back1()!=0){
-							current->credit-=3;
-							comp[2].setCompactb1();
-							comp[2].setCompactb1n(current->fname+" "+current->lname);
-							current->vehicle=comp[2].Type();
-							current->color=comp[2].Color();
-							current->location="LEFT BACK";
-							current->reserve=reserve;
-							current->assigned=true;
-							quit=!quit;
-						}
-						else cout<<"Left back seat occupied. Please reselect." << endl;
-						break;
-					case 3:
-						if(comp[2].Back2()!=0){
-							current->credit-=3;
-							comp[2].setCompactb2();
-							comp[2].setCompactb2n(current->fname+" "+current->lname);
-							current->vehicle=comp[2].Type();
-							current->color=comp[2].Color();
-							current->location="RIGHT BACK";
-							current->reserve=reserve;
-							current->assigned=true;
-							quit=!quit;
-						}
-						else cout<<"Right back seat occupied. Please reselect." << endl;
-						break;
-					default:
-						cout<<"-INVALID SEAT-\nPlease reselect."<<endl;
-						break;
-					}
-				}else cout << "-INVALID COLOR-\nPlease reselect." << endl;
 			}
 		}else{
 			if(car_num=='3'){
@@ -277,6 +299,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 								current->credit-=5;
 								sed[0].setSedanf();
 								sed[0].setSedanfn(current->fname+" "+current->lname);
+								cout << current->fname << " has been assigned to "<<sed[0].Color() <<" COMPACT's FRONT seat."<<endl;
 								current->vehicle=sed[0].Type();
 								current->color=sed[0].Color();
 								current->location="FRONT";
@@ -291,6 +314,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 								current->credit-=2;
 								sed[0].setSedansb1();
 								sed[0].setSedansb1n(current->fname+" "+current->lname);
+								cout << current->fname << " has been assigned to "<<sed[0].Color() <<" COMPACT's LEFT SIDE BACK seat."<<endl;
 								current->vehicle=sed[0].Type();
 								current->color=sed[0].Color();
 								current->location="LEFT SIDEBACK";
@@ -305,6 +329,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 								current->credit-=1;
 								sed[0].setSedansm();
 								sed[0].setSedansmn(current->fname+" "+current->lname);
+								cout << current->fname << " has been assigned to "<<sed[0].Color() <<" COMPACT's MIDDLE BACK seat."<<endl;
 								current->vehicle=sed[0].Type();
 								current->color=sed[0].Color();
 								current->location="MIDDLE BACK";
@@ -319,6 +344,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 								current->credit-=2;
 								sed[0].setSedansb2();
 								sed[0].setSedansb2n(current->fname+" "+current->lname);
+								cout << current->fname << " has been assigned to "<<sed[0].Color() <<" COMPACT's RIGHT SIDE BACK seat."<<endl;
 								current->vehicle=sed[0].Type();
 								current->color=sed[0].Color();
 								current->location="RIGHT SIDEBACK";
@@ -342,6 +368,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 									current->credit-=5;
 									sed[1].setSedanf();
 									sed[1].setSedanfn(current->fname+" "+current->lname);
+									cout << current->fname << " has been assigned to "<<sed[1].Color() <<" COMPACT's FRONT seat."<<endl;
 									current->vehicle=sed[1].Type();
 									current->color=sed[1].Color();
 									current->location="FRONT";
@@ -356,6 +383,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 									current->credit-=2;
 									sed[1].setSedansb1();
 									sed[1].setSedansb1n(current->fname+" "+current->lname);
+									cout << current->fname << " has been assigned to "<<sed[1].Color() <<" COMPACT's LEFT SIDE BACK seat."<<endl;
 									current->vehicle=sed[1].Type();
 									current->color=sed[1].Color();
 									current->location="LEFT SIDEBACK";
@@ -370,6 +398,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 									current->credit-=1;
 									sed[1].setSedansm();
 									sed[1].setSedansmn(current->fname+" "+current->lname);
+									cout << current->fname << " has been assigned to "<<sed[1].Color() <<" COMPACT's MIDDLE BACK seat."<<endl;
 									current->vehicle=sed[1].Type();
 									current->color=sed[1].Color();
 									current->location="MIDDLE BACK";
@@ -384,6 +413,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 									current->credit-=2;
 									sed[1].setSedansb2();
 									sed[1].setSedansb2n(current->fname+" "+current->lname);
+									cout << current->fname << " has been assigned to "<<sed[1].Color() <<" COMPACT's RIGHT SIDE BACK seat."<<endl;
 									current->vehicle=sed[1].Type();
 									current->color=sed[1].Color();
 									current->location="RIGHT SIDEBACK";
@@ -407,6 +437,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 										current->credit-=5;
 										sed[2].setSedanf();
 										sed[2].setSedanfn(current->fname+" "+current->lname);
+										cout << current->fname << " has been assigned to "<<sed[2].Color() <<" COMPACT's FRONT seat."<<endl;
 										current->vehicle=sed[2].Type();
 										current->color=sed[2].Color();
 										current->location="FRONT";
@@ -421,6 +452,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 										current->credit-=2;
 										sed[2].setSedansb1();
 										sed[2].setSedansb1n(current->fname+" "+current->lname);
+										cout << current->fname << " has been assigned to "<<sed[2].Color() <<" COMPACT's LEFT SIDE BACK seat."<<endl;
 										current->vehicle=sed[2].Type();
 										current->color=sed[2].Color();
 										current->location="LEFT SIDEBACK";
@@ -435,6 +467,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 										current->credit-=1;
 										sed[2].setSedansm();
 										sed[2].setSedansmn(current->fname+" "+current->lname);
+										cout << current->fname << " has been assigned to "<<sed[2].Color() <<" COMPACT's MIDDLE BACK seat."<<endl;
 										current->vehicle=sed[2].Type();
 										current->color=sed[2].Color();
 										current->location="MIDDLE BACK";
@@ -449,6 +482,7 @@ bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], i
 										current->credit-=2;
 										sed[2].setSedansb2();
 										sed[2].setSedansb2n(current->fname+" "+current->lname);
+										cout << current->fname << " has been assigned to "<<sed[2].Color() <<" COMPACT's RIGHT SIDE BACK seat."<<endl;
 										current->vehicle=sed[2].Type();
 										current->color=sed[2].Color();
 										current->location="RIGHT SIDEBACK";
@@ -548,36 +582,113 @@ void Modify(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]){
 	//check reservation #/print error, display vehicle+seat,reselect vehicle, reselect seat
 	//CREATE VEHICLE+SEAT function and replace in Create()
 	passenger *current=head;
-	int res;
+	int res,credit=0;
 	bool res_check=false,quit=false;
-	do{
+	while(quit==false){
 		cout << "Please enter valid Reservation number: ";
 		cin>>res;
 		if(res<=9 && res>0)
 			cin.ignore();
+		if(res<=0 || res>getCount(head)){
+			cout<<"-INVALID RESERVATION-\nPlease reselect."<<endl;
+		}
 		else{
 			while(current != NULL){
 				if(current->reserve==res){
 					res_check=true;
-					cout << current->fname <<" "<<current->lname << " has " << current->credit << " credits remaining." << endl;
 					if(current->credit<=0){
 						current->randomized=true;
 						cout << current->fname << " " << current->lname << " will be assigned to remaining available seats." << endl;
+						quit=!quit;
 						break;
 					}
-					else current->randomized=false;
+					else{
+						current->randomized=false;
+						if(current->vehicle=="PICKUP"){
+							for(int i=0;i<3;i++){
+								if(current->color==pick[i].Color()){
+									if(pick[i].front==0 && pick[i].name==(current->fname+" "+current->lname))
+										credit=5;
+									pick[i].setPickupn("");
+									pick[i].setPickup(credit);
+									current->location="";
+									current->color="";
+									current->vehicle="";
+									current->credit+=credit;
+									current->assigned=false;
+								}
+							}
+						}
+						if(current->vehicle=="COMPACT"){
+							for(int i=0;i<3;i++){
+								if(current->color==comp[i].Color()){
+									if(comp[i].front==0 && comp[i].fname==(current->fname+" "+current->lname)){
+										credit=5;
+										comp[i].setCompactfn("");
+										comp[i].setCompactf(credit);
+									}
+									if(comp[i].back1==0 && comp[i].b1name==(current->fname+" "+current->lname)){
+										credit=3;
+										comp[i].setCompactb1n("");
+										comp[i].setCompactb1(credit);
+									}
+									if(comp[i].back2==0 && comp[i].b2name==(current->fname+" "+current->lname)){
+										credit=3;
+										comp[i].setCompactb2n("");
+										comp[i].setCompactb2(credit);
+									}
+									current->credit+=credit;
+									current->location="";
+									current->color="";
+									current->vehicle="";
+									current->assigned=false;
+								}
+							}
+						}
+						if(current->vehicle=="SEDAN"){
+							for(int i=0;i<3;i++){
+								if(current->color==sed[i].Color()){
+									if(sed[i].front==0 && sed[i].fname==(current->fname+" "+current->lname)){
+										credit=5;
+										sed[i].setSedanfn("");
+										sed[i].setSedanf(credit);
+									}
+									if(sed[i].sideback1==0 && sed[i].sb1name==(current->fname+" "+current->lname)){
+										credit=2;
+										sed[i].setSedansb1n("");
+										sed[i].setSedansb1(credit);
+									}
+									if(sed[i].sidemiddle==0 && sed[i].smname==(current->fname+" "+current->lname)){
+										credit=1;
+										sed[i].setSedansmn("");
+										sed[i].setSedansm(credit);
+									}
+									if(sed[i].sideback2==0 && sed[i].sb2name==(current->fname+" "+current->lname)){
+										credit=2;
+										sed[i].setSedansb2n("");
+										sed[i].setSedansb2(credit);
+									}
+									current->credit+=credit;
+									current->location="";
+									current->color="";
+									current->vehicle="";
+									current->assigned=false;
+								}
+							}
+						}
+						cout << current->fname <<" "<<current->lname << " has " << current->credit << " credits remaining." << endl;
+						Display(pick,comp,sed);
+						quit=Select(current, pick, comp, sed, res);
+					}
 				}
 				current = current->nextaddr;
 			}
 			if(res_check==false){
 				cout<<"-INVALID RESERVATION-\nPlease reselect from main menu."<<endl;
-				quit=true;
-			}
-			else{
-				quit=Select(current, pick, comp, sed, res);
+				quit=!quit;
 			}
 		}
-	}while(!quit);
+	}
 }
 
 void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int reserve){
@@ -630,7 +741,7 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 								current->credit-=5;
 								pick[i].setPickup();
 								pick[i].setPickupn(current->fname+" "+current->lname);
-								cout << current->fname << "has been assigned to "<<pick[i].Color() <<"PICKUP's front seat."<<endl;
+								cout << current->fname << " has been assigned to "<<pick[i].Color() <<" PICKUP's FRONT seat."<<endl;
 								current->vehicle=pick[i].Front();
 								current->color=pick[i].Color();
 								current->location="FRONT";
@@ -644,7 +755,7 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 									current->credit-=5;
 									comp[i].setCompactf();
 									comp[i].setCompactfn(current->fname+" "+current->lname);
-									cout << current->fname << "has been assigned to "<<comp[i].Color() <<"COMPACT's front seat."<<endl;
+									cout << current->fname << " has been assigned to "<<comp[i].Color() <<" COMPACT's FRONT seat."<<endl;
 									current->vehicle=comp[i].Type();
 									current->color=comp[i].Color();
 									current->location="FRONT";
@@ -658,7 +769,7 @@ void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 										current->credit-=5;
 										sed[i].setSedanf();
 										sed[i].setSedanfn(current->fname+" "+current->lname);
-										cout << current->fname << "has been assigned to "<<sed[i].Color() <<"SEDAN's front seat."<<endl;
+										cout << current->fname << " has been assigned to "<<sed[i].Color() <<" SEDAN's FRONT seat."<<endl;
 										current->vehicle=sed[i].Type();
 										current->color=sed[i].Color();
 										current->location="FRONT";
@@ -698,7 +809,114 @@ void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int 
 		cin>>res;
 		if(res<=9 && res>0)
 			cin.ignore();
+		if(res<=0 || res>getCount(head)){
+			cout<<"-INVALID RESERVATION-\nPlease reselect."<<endl;
+		}
 		else{
+
+
+//			if(res<=0 || res>getCount(head)){
+//						cout<<"-INVALID RESERVATION-\nPlease reselect."<<endl;
+//					}
+//					else{
+//						while(current != NULL){
+//							if(current->reserve==res){
+//								res_check=true;
+//								if(current->credit<=0){
+//									current->randomized=true;
+//									cout << current->fname << " " << current->lname << " will be assigned to remaining available seats." << endl;
+//									quit=!quit;
+//									break;
+//								}
+//								else{
+//									current->randomized=false;
+//									if(current->vehicle=="PICKUP"){
+//										for(int i=0;i<3;i++){
+//											if(current->color==pick[i].Color()){
+//												if(pick[i].front==0 && pick[i].name==(current->fname+" "+current->lname))
+//													credit=5;
+//												pick[i].setPickupn("");
+//												pick[i].setPickup(credit);
+//												current->location="";
+//												current->color="";
+//												current->vehicle="";
+//												current->credit+=credit;
+//												current->assigned=false;
+//											}
+//										}
+//									}
+//									if(current->vehicle=="COMPACT"){
+//										for(int i=0;i<3;i++){
+//											if(current->color==comp[i].Color()){
+//												if(comp[i].front==0 && comp[i].fname==(current->fname+" "+current->lname)){
+//													credit=5;
+//													comp[i].setCompactfn("");
+//													comp[i].setCompactf(credit);
+//												}
+//												if(comp[i].back1==0 && comp[i].b1name==(current->fname+" "+current->lname)){
+//													credit=3;
+//													comp[i].setCompactb1n("");
+//													comp[i].setCompactb1(credit);
+//												}
+//												if(comp[i].back2==0 && comp[i].b2name==(current->fname+" "+current->lname)){
+//													credit=3;
+//													comp[i].setCompactb2n("");
+//													comp[i].setCompactb2(credit);
+//												}
+//												current->credit+=credit;
+//												current->location="";
+//												current->color="";
+//												current->vehicle="";
+//												current->assigned=false;
+//											}
+//										}
+//									}
+//									if(current->vehicle=="SEDAN"){
+//										for(int i=0;i<3;i++){
+//											if(current->color==sed[i].Color()){
+//												if(sed[i].front==0 && sed[i].fname==(current->fname+" "+current->lname)){
+//													credit=5;
+//													sed[i].setSedanfn("");
+//													sed[i].setSedanf(credit);
+//												}
+//												if(sed[i].sideback1==0 && sed[i].sb1name==(current->fname+" "+current->lname)){
+//													credit=2;
+//													sed[i].setSedansb1n("");
+//													sed[i].setSedansb1(credit);
+//												}
+//												if(sed[i].sidemiddle==0 && sed[i].smname==(current->fname+" "+current->lname)){
+//													credit=1;
+//													sed[i].setSedansmn("");
+//													sed[i].setSedansm(credit);
+//												}
+//												if(sed[i].sideback2==0 && sed[i].sb2name==(current->fname+" "+current->lname)){
+//													credit=2;
+//													sed[i].setSedansb2n("");
+//													sed[i].setSedansb2(credit);
+//												}
+//												current->credit+=credit;
+//												current->location="";
+//												current->color="";
+//												current->vehicle="";
+//												current->assigned=false;
+//											}
+//										}
+//									}
+//									cout << current->fname <<" "<<current->lname << " has " << current->credit << " credits remaining." << endl;
+//									Display(pick,comp,sed);
+//									quit=Select(current, pick, comp, sed, res);
+//								}
+//							}
+//							current = current->nextaddr;
+//						}
+//						if(res_check==false){
+//							cout<<"-INVALID RESERVATION-\nPlease reselect from main menu."<<endl;
+//							quit=!quit;
+//						}
+//					}
+
+
+
 			while(current != NULL){
 				if(current->reserve==res){
 					res_check=true;
