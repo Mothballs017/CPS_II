@@ -155,11 +155,11 @@ Compact setCompact(Compact C);
 Sedan setSedan(Sedan S);
 bool Select(passenger *current, Pickup pick[3], Compact comp[3], Sedan sed[3], int reserve);
 passenger *Read();
-void Reservation(passenger *head);
+void Reservation(passenger *head,string password);
 void Modify(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]);
 void Create(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int reserve);
 void Delete(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3], int reserve);
 void Print(passenger *head, Pickup pick[3], Compact comp[3], Sedan sed[3]);
 void Display(Pickup pick[3],Compact comp[3],Sedan sed[3]);
-
+void Credit(passenger *head,string password);
 #endif /* SEAT_CREDITS_H_ */
