@@ -63,6 +63,7 @@ int main()
 	passenger *head = Read();
 	int reserve_num=1,menu_select;
 	bool running=true;
+	string password="BATMAN";
 	//start loop
 	while(running){
 		cout << "|1| Create Reservation"<<endl;
@@ -70,8 +71,9 @@ int main()
 		cout << "|3| Modify Reservation"<<endl;
 		cout << "|4| Delete Reservation"<<endl;
 		cout << "|5| Print Vehicle"<<endl;
-		cout << "|6| Print Reservation -ADMIN-"<<endl;
-		cout << "|7| Exit Menu"<<endl;
+		cout << "|6| Print Reservation  -ADMIN-"<<endl;
+		cout << "|7| Add Credit         -ADMIN-"<<endl;
+		cout << "|8| Exit Menu"<<endl;
 		cout << "Select from menu: \n";
 		cin >> menu_select; cin.ignore();
 		switch(menu_select){
@@ -92,10 +94,13 @@ int main()
 			Print(head,pick,comp,sed);
 			break;
 		case 6:
-			Reservation(head);
+			Reservation(head,password);
+			break;
+		case 8:
+			running=!running;
 			break;
 		case 7:
-			running=!running;
+			Credit(head,password);
 			break;
 		default:
 			cout<<"-INVALID SELECTION-\nPlease reselect from menu."<<endl;
