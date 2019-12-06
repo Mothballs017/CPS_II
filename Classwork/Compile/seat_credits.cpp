@@ -18,27 +18,13 @@ using namespace std;
 
 int main()
 {
-	//passenger		| Completed (M)
-	//Car			| Completed (M)
-	//Pickup		| Completed (M)
-	//Compact		| Completed (M)
-	//Sedan			| Completed (M)
-	//setPickup()	| Completed (M)
-	//setCompact()	| Completed (M)
-	//setSedan()	| Completed (M)
-	//Create()		| Completed (M)
-	//Display()		| Completed (M)
-	//Modify()		| Completed (M)
-	//Delete() 		| Completed (M)
-	//Print()		| Completed (M)
-	//Reservation()	| Completed (M)
-
-	//Select()		| Completed (M)
-
-	//header		| Completed (M)
-	//body cpp		| Completed (M)
-	//main loop		| Completed (M)
-
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	// Name: main()
+	// Input : none
+	// Developer: MATTHEW CHU
+	// Output : none
+	// Description: setup and run main loop
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	Pickup pick[3];
 	pick[0].setCar("PURPLE","PICKUP");
 	pick[0]=setPickup(pick[0]);
@@ -78,8 +64,7 @@ int main()
 		cin >> menu_select; cin.ignore();
 		switch(menu_select){
 		case 1:
-			Create(head,pick,comp,sed,reserve_num);
-			reserve_num++;
+			reserve_num=Create(head,pick,comp,sed,reserve_num);
 			break;
 		case 2:
 			Display(pick,comp,sed);
@@ -97,6 +82,7 @@ int main()
 			Reservation(head,password);
 			break;
 		case 8:
+			cout << "Good-bye!" << endl;
 			running=!running;
 			break;
 		case 7:
